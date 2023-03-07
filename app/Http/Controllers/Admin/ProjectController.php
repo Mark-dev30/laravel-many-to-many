@@ -60,15 +60,17 @@ class ProjectController extends Controller
         $form['slug'] = $slug;
 
 
+
         $newProject = new Project();
         //UN NUOVO OGGETTO "project" VIENE CREATO E POPOLATO CON I DATI DEL FORM UTILIZZANDO IL METODO "FILL()" PER ASSEGNARE TUTTI I VALORI PASSATI DALL'ARRAY "$FORM".
         $newProject->fill($form);
+
 
         //IL NUOVO PROGETTO VIENE SALVATO NEL DATABASE CON IL METODO "save()"
         $newProject->save();
 
         if ($request->has('technologies')) {
-            $newProject->technologies()->attach($request->technoloys);
+            $newProject->technologies()->sync($request->technologies);
         }
         //REINDIRIZZA ALLA PAGINA INDEX. LA FUNZIONE with PASSA ALLA PAGINA INDEX UN MESSAGGIO
         return redirect()->route('admin.projects.index')->with('message', 'PROJECT CREATED');
@@ -122,7 +124,7 @@ class ProjectController extends Controller
         $project->update($form);
 
         if ($request->has('technologies')) {
-            $project->technologies($request->technologies);
+            $project->technologies()->sync($request->technologies);
         }
 
         //REINDIRIZZA ALLA PAGINA INDEX. LA FUNZIONE with PASSA ALLA PAGINA INDEX UN MESSAGGIO
